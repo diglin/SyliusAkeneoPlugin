@@ -181,6 +181,9 @@ final class BatchProductModelTask extends AbstractBatchTask
 
     private function addOrUpdate(PipelinePayloadInterface $payload, ProductInterface $product, array &$resource): void
     {
+        if($resource['parent'] !== 'M10000115') {
+            return;
+        }
         if (!isset($resource['family'])) {
             throw new \LogicException('Missing family attribute on product');
         }
@@ -196,7 +199,7 @@ final class BatchProductModelTask extends AbstractBatchTask
             return;
         }
 
-        $this->completeRequirementProcessor->process($product, $resource);
+//        $this->completeRequirementProcessor->process($product, $resource);
         $this->attributesProcessor->process($product, $resource);
         $this->addProductGroup($resource, $product);
         $this->mainTaxonProcessor->process($product, $resource);

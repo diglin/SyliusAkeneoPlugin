@@ -2,44 +2,38 @@
 
 declare(strict_types=1);
 
-namespace Synolia\SyliusAkeneoPlugin\Task\ProductModel;
+namespace Synolia\SyliusAkeneoPlugin\Task\Asset;
 
 use BluePsyduck\SymfonyProcessManager\ProcessManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Synolia\SyliusAkeneoPlugin\Filter\ProductFilter;
 use Synolia\SyliusAkeneoPlugin\Logger\Messages;
+use Synolia\SyliusAkeneoPlugin\Payload\Asset\AssetPayload;
 use Synolia\SyliusAkeneoPlugin\Payload\PipelinePayloadInterface;
-use Synolia\SyliusAkeneoPlugin\Payload\ProductModel\ProductModelPayload;
 use Synolia\SyliusAkeneoPlugin\Provider\ConfigurationProvider;
 use Synolia\SyliusAkeneoPlugin\Task\AbstractProcessTask;
 
-final class ProcessProductModelsTask extends AbstractProcessTask
+final class ProcessAssetTask extends AbstractProcessTask
 {
     /** @var \Synolia\SyliusAkeneoPlugin\Provider\ConfigurationProvider */
     private $configurationProvider;
-
-    /** @var \Synolia\SyliusAkeneoPlugin\Filter\ProductFilter */
-    private $productFilter;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         LoggerInterface $akeneoLogger,
         RepositoryInterface $apiConfigurationRepository,
         ProcessManagerInterface $processManager,
-        BatchProductModelTask $task,
+        BatchAssetTask $task,
         ConfigurationProvider $configurationProvider,
-        ProductFilter $productFilter,
         string $projectDir
     ) {
         parent::__construct($entityManager, $processManager, $task, $akeneoLogger, $apiConfigurationRepository, $projectDir);
         $this->configurationProvider = $configurationProvider;
-        $this->productFilter = $productFilter;
     }
 
     /**
-     * @param ProductModelPayload $payload
+     * @param AssetPayload $payload
      */
     public function __invoke(PipelinePayloadInterface $payload): PipelinePayloadInterface
     {
@@ -52,12 +46,7 @@ final class ProcessProductModelsTask extends AbstractProcessTask
         }
 
         $this->logger->notice(Messages::retrieveFromAPI($payload->getType()));
-
-        $queryParameters = $this->productFilter->getProductModelFilters();
-        $resources = $payload->getAkeneoPimClient()->getProductModelApi()->all(
-            $this->configurationProvider->getConfiguration()->getPaginationSize(),
-            []
-        );
+        $resources = $payload->getAkeneoPimClient()->getAssetFamilyApi()->all();
 
         $this->handle($payload, $resources);
         $this->processManager->waitForAllProcesses();
@@ -69,6 +58,6 @@ final class ProcessProductModelsTask extends AbstractProcessTask
     {
         $commandContext = ($payload->hasCommandContext()) ? $payload->getCommandContext() : null;
 
-        return new ProductModelPayload($payload->getAkeneoPimClient(), $commandContext);
+        return new AssetPayload($payload->getAkeneoPimClient(), $commandContext);
     }
 }

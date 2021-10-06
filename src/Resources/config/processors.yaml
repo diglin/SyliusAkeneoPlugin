@@ -8,6 +8,12 @@ services:
         tags:
             - { name: !php/const Synolia\SyliusAkeneoPlugin\Processor\ProductAttribute\AkeneoAttributeProcessorInterface::TAG_ID }
 
+    Synolia\SyliusAkeneoPlugin\Processor\ProductAttribute\AssetAttributeProcessor:
+        arguments:
+            $akeneoAssetRepository: '@akeneo.repository.asset'
+        tags:
+            - { name: !php/const Synolia\SyliusAkeneoPlugin\Processor\ProductAttribute\AkeneoAttributeProcessorInterface::TAG_ID }
+
     Synolia\SyliusAkeneoPlugin\Processor\ProductAttributeValue\ReferenceEntity\JsonReferenceEntityAttributeValueProcessor:
         tags:
             - { name: !php/const Synolia\SyliusAkeneoPlugin\Processor\ProductAttributeValue\ReferenceEntity\ReferenceEntityAttributeValueProcessorInterface::TAG_ID }
