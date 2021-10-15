@@ -9,9 +9,6 @@ use Symfony\Component\Console\Input\InputArgument;
 
 abstract class AbstractBatchCommand extends Command
 {
-    /** @var string The default command description */
-    protected static string $defaultDescription = '';
-
     protected function configure(): void
     {
         $this->setDescription(static::$defaultDescription);
