@@ -20,7 +20,7 @@ class ProductVariantModelAkeneoAttributeProcessor extends AbstractModelAkeneoAtt
         'tracked',
         'width',
         'height',
-        'enabled',
+//        'enabled', // Compatible Sylius > 1.8
         'shipping_required',
     ];
 
