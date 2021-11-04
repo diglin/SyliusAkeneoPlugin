@@ -199,7 +199,7 @@ final class AddOrUpdateProductModelTask implements AkeneoTaskInterface
         $totalItemsCount = $this->countTotalProducts();
 
         $query = $this->prepareSelectQuery(ProductModelPayload::SELECT_PAGINATION_SIZE, 0);
-        $query->executeStatement();
+        $query->execute();
 
         while ($results = $query->fetchAll()) {
             foreach ($results as $result) {
@@ -227,7 +227,7 @@ final class AddOrUpdateProductModelTask implements AkeneoTaskInterface
             $processedCount += \count($results);
             $this->logger->info(\sprintf('Processed %d products out of %d.', $processedCount, $totalItemsCount));
             $query = $this->prepareSelectQuery(ProductModelPayload::SELECT_PAGINATION_SIZE, $processedCount);
-            $query->executeStatement();
+            $query->execute();
         }
 
         $this->logger->notice(Messages::countCreateAndUpdate($this->type, $this->createCount, $this->updateCount));

@@ -35,7 +35,8 @@ class SetupAttributeTask implements AkeneoTaskInterface
               PRIMARY KEY (`id`));',
             AttributePayload::TEMP_AKENEO_TABLE_NAME
         );
-        $this->entityManager->getConnection()->executeStatement($query);
+        $stmt = $this->entityManager->getConnection()->prepare($query);
+        $stmt->execute();
 
         return $payload;
     }

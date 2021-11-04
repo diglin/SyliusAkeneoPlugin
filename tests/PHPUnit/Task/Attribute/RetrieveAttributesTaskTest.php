@@ -39,7 +39,7 @@ final class RetrieveAttributesTaskTest extends AbstractTaskTest
             'SELECT count(id) FROM `%s`',
             AttributePayload::TEMP_AKENEO_TABLE_NAME
         ));
-        $query->executeStatement();
+        $query->execute();
 
         return (int) \current($query->fetch());
     }

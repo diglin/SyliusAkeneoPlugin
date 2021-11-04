@@ -47,7 +47,7 @@ final class EnableDisableProductModelTaskTest extends AbstractTaskTest
         $optionsPayload = $retrieveProductModelsTask->__invoke($productModelPayload);
 
         $query = $this->prepareSelectQuery(ProductModelPayload::SELECT_PAGINATION_SIZE, 0);
-        $query->executeStatement();
+        $query->execute();
         $processedCount = 0;
 
         while ($results = $query->fetchAll()) {
@@ -64,7 +64,7 @@ final class EnableDisableProductModelTaskTest extends AbstractTaskTest
 
             $processedCount += \count($results);
             $query = $this->prepareSelectQuery(ProductModelPayload::SELECT_PAGINATION_SIZE, $processedCount);
-            $query->executeStatement();
+            $query->execute();
         }
 
         /** @var AddOrUpdateProductModelTask $addOrUpdateProductModelsTask */

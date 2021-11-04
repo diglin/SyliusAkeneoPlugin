@@ -117,7 +117,7 @@ final class CreateUpdateEntityTask implements AkeneoTaskInterface
             $totalItemsCount = $this->count();
 
             $query = $this->prepareSelectQuery(AttributePayload::SELECT_PAGINATION_SIZE, 0);
-            $query->executeStatement();
+            $query->execute();
 
             while ($results = $query->fetchAll()) {
                 foreach ($results as $result) {
@@ -151,7 +151,7 @@ final class CreateUpdateEntityTask implements AkeneoTaskInterface
                 $processedCount += \count($results);
                 $this->logger->info(\sprintf('Processed %d attributes out of %d.', $processedCount, $totalItemsCount));
                 $query = $this->prepareSelectQuery(AttributePayload::SELECT_PAGINATION_SIZE, $processedCount);
-                $query->executeStatement();
+                $query->execute();
             }
 
             $this->logger->notice(Messages::countCreateAndUpdate($this->type, $this->createCount, $this->updateCount));
@@ -217,7 +217,7 @@ final class CreateUpdateEntityTask implements AkeneoTaskInterface
             'SELECT count(id) FROM `%s`',
             AttributePayload::TEMP_AKENEO_TABLE_NAME
         ));
-        $query->executeStatement();
+        $query->execute();
 
         return (int) \current($query->fetch());
     }

@@ -196,7 +196,7 @@ abstract class AbstractTaskTest extends ApiTestCase
             ProductPayload::TEMP_AKENEO_TABLE_NAME
         ));
         $query->bindValue('is_simple', $isSimple, ParameterType::BOOLEAN);
-        $query->executeStatement();
+        $query->execute();
 
         return (int) \current($query->fetch());
     }

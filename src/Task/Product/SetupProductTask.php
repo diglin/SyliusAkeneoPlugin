@@ -36,7 +36,8 @@ class SetupProductTask implements AkeneoTaskInterface
               PRIMARY KEY (`id`));',
             ProductPayload::TEMP_AKENEO_TABLE_NAME
         );
-        $this->entityManager->getConnection()->executeStatement($query);
+        $stmt = $this->entityManager->getConnection()->prepare($query);
+        $stmt->execute();
 
         return $payload;
     }

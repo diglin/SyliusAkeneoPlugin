@@ -73,7 +73,7 @@ final class RetrieveOptionsTask implements AkeneoTaskInterface
         $totalItemsCount = $this->count();
 
         $query = $this->prepareSelectQuery(AttributePayload::SELECT_PAGINATION_SIZE, 0);
-        $query->executeStatement();
+        $query->execute();
 
         while ($results = $query->fetchAll()) {
             foreach ($results as $result) {
@@ -106,7 +106,7 @@ final class RetrieveOptionsTask implements AkeneoTaskInterface
             $processedCount += \count($results);
             $this->logger->info(\sprintf('Processed %d attributes out of %d.', $processedCount, $totalItemsCount));
             $query = $this->prepareSelectQuery(AttributePayload::SELECT_PAGINATION_SIZE, $processedCount);
-            $query->executeStatement();
+            $query->execute();
         }
 
         $optionsPayload = $this->process($payload, $compatibleAttributes);
@@ -121,7 +121,7 @@ final class RetrieveOptionsTask implements AkeneoTaskInterface
             'SELECT count(id) FROM `%s`',
             AttributePayload::TEMP_AKENEO_TABLE_NAME
         ));
-        $query->executeStatement();
+        $query->execute();
 
         return (int) \current($query->fetch());
     }
