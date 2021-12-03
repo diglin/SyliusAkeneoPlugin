@@ -30,6 +30,9 @@ final class AttributesController extends AbstractController
     private $attributeTypeMappingRepository;
 
     /** @var RepositoryInterface */
+    private $attributesExcludedAkeneoRepository;
+
+    /** @var RepositoryInterface */
     private $apiConfigurationRepository;
 
     /** @var FlashBagInterface */
@@ -46,6 +49,7 @@ final class AttributesController extends AbstractController
         SettingsManagerInterface $settingsManager,
         RepositoryInterface $attributeTypeMappingRepository,
         RepositoryInterface $attributeAkeneoSyliusMappingRepository,
+        RepositoryInterface $attributesExcludedAkeneoRepository,
         RepositoryInterface $apiConfigurationRepository,
         FlashBagInterface $flashBag,
         TranslatorInterface $translator
@@ -54,6 +58,7 @@ final class AttributesController extends AbstractController
         $this->settingsManager = $settingsManager;
         $this->attributeTypeMappingRepository = $attributeTypeMappingRepository;
         $this->attributeAkeneoSyliusMappingRepository = $attributeAkeneoSyliusMappingRepository;
+        $this->attributesExcludedAkeneoRepository = $attributesExcludedAkeneoRepository;
         $this->apiConfigurationRepository = $apiConfigurationRepository;
         $this->flashBag = $flashBag;
         $this->translator = $translator;
@@ -74,6 +79,9 @@ final class AttributesController extends AbstractController
         /** @var AttributeAkeneoSyliusMapping[] $attributeAkeneoSyliusMappings */
         $attributeAkeneoSyliusMappings = $this->attributeAkeneoSyliusMappingRepository->findAll();
 
+        /** @var \Synolia\SyliusAkeneoPlugin\Entity\AttributesExcludedAkeneo[] $attributeAkeneoSyliusMappings */
+        $attributesExcludedAkeneo = $this->attributesExcludedAkeneoRepository->findAll();
+
         $settings = ['import_referential_attributes' => SettingType::AKENEO_SETTINGS['import_referential_attributes']];
         foreach ($settings as $key => $value) {
             $settings[$key] = $this->settingsManager->get($key);
@@ -84,6 +92,7 @@ final class AttributesController extends AbstractController
             [
                 AttributesTypeMappingType::ATTRIBUTE_TYPE_MAPPINGS_CODE => $attributeTypeMappings,
                 AttributesTypeMappingType::ATTRIBUTE_AKENEO_SYLIUS_MAPPINGS_CODE => $attributeAkeneoSyliusMappings,
+                AttributesTypeMappingType::ATTRIBUTE_AKENEO_TO_EXCLUDE => $attributesExcludedAkeneo,
                 'settings' => $settings,
             ],
         );
@@ -93,7 +102,7 @@ final class AttributesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $attributes = $form->getData();
 
-            $this->removeRemovedMappedItemsFromFormRequest($attributes, $attributeTypeMappings, $attributeAkeneoSyliusMappings);
+            $this->removeRemovedMappedItemsFromFormRequest($attributes, $attributeTypeMappings, $attributeAkeneoSyliusMappings, $attributesExcludedAkeneo);
             $this->addMappedItemsFromFormRequest($attributes);
 
             foreach ($attributes['settings'] as $name => $value) {
@@ -114,7 +123,8 @@ final class AttributesController extends AbstractController
     private function removeRemovedMappedItemsFromFormRequest(
         array $attributes,
         array $attributeTypeMappings,
-        array $attributeAkeneoSyliusMappings
+        array $attributeAkeneoSyliusMappings,
+        array $attributesToExclude
     ): void {
         foreach ($attributeTypeMappings as $attributeTypeMapping) {
             if (false === \array_search($attributeTypeMapping, $attributes[AttributesTypeMappingType::ATTRIBUTE_TYPE_MAPPINGS_CODE], true)) {
@@ -127,6 +137,12 @@ final class AttributesController extends AbstractController
                 $this->entityManager->remove($attributeAkeneoSyliusMapping);
             }
         }
+
+        foreach ($attributesToExclude as $attributeToExclude) {
+            if (false === \array_search($attributeToExclude, $attributes[AttributesTypeMappingType::ATTRIBUTE_AKENEO_TO_EXCLUDE], true)) {
+                $this->entityManager->remove($attributeToExclude);
+            }
+        }
     }
 
     private function addMappedItemsFromFormRequest(array $attributes): void
@@ -137,6 +153,10 @@ final class AttributesController extends AbstractController
 
         foreach ($attributes[AttributesTypeMappingType::ATTRIBUTE_AKENEO_SYLIUS_MAPPINGS_CODE] as $attributeAkeneoSyliusMapping) {
             $this->entityManager->persist($attributeAkeneoSyliusMapping);
+        }
+
+        foreach ($attributes[AttributesTypeMappingType::ATTRIBUTE_AKENEO_TO_EXCLUDE] as $attributesToExclude) {
+            $this->entityManager->persist($attributesToExclude);
         }
     }
 }
