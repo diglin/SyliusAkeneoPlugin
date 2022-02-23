@@ -72,7 +72,7 @@ final class AttributesController extends AbstractController
             $attributes = $form->getData();
 
             $this->removeRemovedMappedItemsFromFormRequest($attributes, $attributeTypeMappings, $attributeAkeneoSyliusMappings, $attributesExcludedAkeneo);
-            $this->addMappedItemsFromFormRequest($attributes);
+            $this->addMappedItemsFromFormRequest($attributes, $attributesExcludedAkeneo);
 
             foreach ($attributes['settings'] as $name => $value) {
                 $this->settingsManager->set($name, $value);
@@ -108,13 +108,13 @@ final class AttributesController extends AbstractController
         }
 
         foreach ($attributesToExclude as $attributeToExclude) {
-            if (false === array_search($attributeToExclude, $attributes[AttributesTypeMappingType::ATTRIBUTE_AKENEO_TO_EXCLUDE], true)) {
+            if (false === array_search((string)$attributeToExclude, $attributes[AttributesTypeMappingType::ATTRIBUTE_AKENEO_TO_EXCLUDE], true)) {
                 $this->entityManager->remove($attributeToExclude);
             }
         }
     }
 
-    private function addMappedItemsFromFormRequest(array $attributes): void
+    private function addMappedItemsFromFormRequest(array $attributes, array $attributesToExclude): void
     {
         foreach ($attributes[AttributesTypeMappingType::ATTRIBUTE_TYPE_MAPPINGS_CODE] as $attributeTypeMapping) {
             $this->entityManager->persist($attributeTypeMapping);
@@ -124,8 +124,14 @@ final class AttributesController extends AbstractController
             $this->entityManager->persist($attributeAkeneoSyliusMapping);
         }
 
+        $attributesToExcludeList = array_map(function ($value) {
+            return (string)$value;
+        }, $attributesToExclude);
+
         foreach ($attributes[AttributesTypeMappingType::ATTRIBUTE_AKENEO_TO_EXCLUDE] as $attributesToExclude) {
-            $this->entityManager->persist($attributesToExclude);
+            if (!in_array($attributesToExclude, $attributesToExcludeList)) {
+                $this->entityManager->persist((new AttributesExcludedAkeneo())->setAkeneoAttribute($attributesToExclude));
+            }
         }
     }
 }

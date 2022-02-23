@@ -11,22 +11,8 @@ use Synolia\SyliusAkeneoPlugin\Entity\AttributesExcludedAkeneo;
 
 final class AttributesExcludedAkeneoType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function getParent()
     {
-        $builder
-            ->add('akeneo_attribute', AttributeCodeChoiceType::class,
-                [
-                    'required' => true,
-                ]);
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => AttributesExcludedAkeneo::class,
-        ]);
+        return AttributeCodeChoiceType::class;
     }
 }
