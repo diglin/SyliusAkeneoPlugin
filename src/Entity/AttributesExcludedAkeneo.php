@@ -19,13 +19,13 @@ class AttributesExcludedAkeneo implements ResourceInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
      * @ORM\Column(type="string")
      */
-    private $akeneoAttribute;
+    private string $akeneoAttribute;
 
     /**
      * {@inheritdoc}
@@ -45,5 +45,10 @@ class AttributesExcludedAkeneo implements ResourceInterface
         $this->akeneoAttribute = $akeneoAttribute;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getAkeneoAttribute();
     }
 }
