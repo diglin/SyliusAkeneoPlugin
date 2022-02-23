@@ -28,7 +28,7 @@ class ProductFiltersRules implements ResourceInterface
     /** @ORM\Column(type="string", length=255) */
     private ?string $mode = null;
 
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     private ?string $advancedFilter = null;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
