@@ -29,6 +29,7 @@ final class ProductFilter implements ProductFilterInterface
         'categories',
         'family',
         'created',
+        'identifier'
     ];
 
     /** @var EntityRepository */
