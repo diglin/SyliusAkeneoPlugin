@@ -16,6 +16,8 @@ final class AttributesTypeMappingType extends AbstractType
 
     public const ATTRIBUTE_AKENEO_SYLIUS_MAPPINGS_CODE = 'attributeAkeneoSylius';
 
+    public const ATTRIBUTE_AKENEO_TO_EXCLUDE = 'attributesExcludedAkeneo';
+
     /**
      * {@inheritdoc}
      */
@@ -41,6 +43,11 @@ final class AttributesTypeMappingType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'label' => 'Attributes Akeneo to Sylius Mapping',
+            ])
+            ->add(self::ATTRIBUTE_AKENEO_TO_EXCLUDE, AttributeCodeChoiceType::class, [
+                'label' => 'Attributes Akeneo to exclude',
+                'required' => false,
+                'multiple' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'sylius.ui.save',
