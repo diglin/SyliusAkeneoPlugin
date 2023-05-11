@@ -44,7 +44,7 @@ final class AttributesTypeMappingType extends AbstractType
                 'by_reference' => false,
                 'label' => 'Attributes Akeneo to Sylius Mapping',
             ])
-            ->add(self::ATTRIBUTE_AKENEO_TO_EXCLUDE, \Synolia\SyliusAkeneoPlugin\Form\Type\AttributeCodeChoiceType::class, [
+            ->add(self::ATTRIBUTE_AKENEO_TO_EXCLUDE, AttributeCodeChoiceType::class, [
                 'label' => 'Attributes Akeneo to exclude',
                 'required' => false,
                 'multiple' => true,
