@@ -44,7 +44,7 @@ abstract class AbstractProcessTask implements AkeneoTaskInterface
         ));
         $query->executeStatement();
 
-        return (int) current($query->fetch());
+        return (int) current($query->execute()->fetch());
     }
 
     protected function min(string $tableName): int
@@ -55,7 +55,7 @@ abstract class AbstractProcessTask implements AkeneoTaskInterface
         ));
         $query->executeStatement();
 
-        return (int) current($query->fetch());
+        return (int) current($query->execute()->fetch());
     }
 
     protected function prepareSelectBatchIdsQuery(
@@ -132,7 +132,7 @@ abstract class AbstractProcessTask implements AkeneoTaskInterface
             $query = $this->prepareSelectBatchIdsQuery($initialPayload->getTmpTableName(), $min - 1, $initialPayload->getBatchSize());
             $query->executeStatement();
 
-            while ($results = $query->fetchAll()) {
+            while ($results = $query->execute()->fetchAll()) {
                 $ids = [];
                 foreach ($results as $result) {
                     $ids[] = $result['id'];

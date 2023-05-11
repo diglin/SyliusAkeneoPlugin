@@ -55,7 +55,7 @@ final class BatchAssociationTypesTask extends AbstractBatchTask
             $query = $this->getSelectStatement($payload);
             $query->executeStatement();
 
-            while ($results = $query->fetchAll()) {
+            while ($results = $query->execute()->fetchAll()) {
                 foreach ($results as $result) {
                     $resource = json_decode($result['values'], true, 512, \JSON_THROW_ON_ERROR);
 

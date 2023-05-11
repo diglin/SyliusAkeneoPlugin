@@ -31,7 +31,7 @@ final class BatchProductsTask extends AbstractBatchTask
         $query = $this->getSelectStatement($payload);
         $query->executeStatement();
 
-        while ($results = $query->fetchAll()) {
+        while ($results = $query->execute()->fetchAll()) {
             foreach ($results as $result) {
                 try {
                     /** @var array{identifier: string,parent: string|null} $resource */
