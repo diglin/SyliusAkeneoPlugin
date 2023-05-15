@@ -79,7 +79,7 @@ final class SynoliaSyliusAkeneoExtension extends Extension implements PrependExt
     private function processApiConfiguration(ContainerBuilder $container, array $config): void
     {
         // If DotEnvApiConnectionProvider configuration is not set, use default DatabaseApiConfigurationProvider
-        if (\count($config) !== 0 && !\array_key_exists('api_configuration', $config)) {
+        if (\count($config) === 0 || !\array_key_exists('api_configuration', $config)) {
             $container->setAlias(ApiConnectionProviderInterface::class, DatabaseApiConfigurationProvider::class);
 
             return;
@@ -108,7 +108,7 @@ final class SynoliaSyliusAkeneoExtension extends Extension implements PrependExt
     private function processCategoryConfiguration(ContainerBuilder $container, array $config): void
     {
         // If CategoryConfigurationProvider configuration is not set, use default DatabaseCategoryConfigurationProvider
-        if (\count($config) !== 0 && !\array_key_exists('category_configuration', $config)) {
+        if (\count($config) === 0 || !\array_key_exists('category_configuration', $config)) {
             $container->setAlias(CategoryConfigurationProviderInterface::class, DatabaseCategoryConfigurationProvider::class);
 
             return;
