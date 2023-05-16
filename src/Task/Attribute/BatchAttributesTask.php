@@ -100,7 +100,12 @@ final class BatchAttributesTask extends AbstractBatchTask
                         if ($this->entityManager->getConnection()->isTransactionActive()) {
                             $this->entityManager->rollback();
                         }
-                        $this->logger->warning($throwable->getMessage());
+                        //Add better logging if an attribut is not imported
+                        $resource = json_decode($result['values'], true, 512, \JSON_THROW_ON_ERROR);
+                        $this->logger->warning('Attribut not imported with code:'.$resource['code'].' with message:'.$throwable->getMessage());
+                        //Do not forget to delete the attribute from the temporary table
+                        // otherwise you might end up with an endless while loop
+                        $this->removeEntry($payload, (int) $result['id']);
                     }
                 }
             }
